@@ -1,36 +1,38 @@
-// Get elements
-const checkbox = document.getElementById('ageConfirm');
-const continueBtn = document.getElementById('continueBtn');
-
-// Enable/disable continue button based on checkbox
-checkbox.addEventListener('change', function() {
-    if (this.checked) {
-        continueBtn.disabled = false;
-        continueBtn.style.cursor = 'pointer';
-    } else {
-        continueBtn.disabled = true;
-        continueBtn.style.cursor = 'not-allowed';
-    }
-});
-
-// Handle continue button click
-continueBtn.addEventListener('click', function() {
-    if (!checkbox.checked) {
-        return;
-    }
-    
-    // Add loading state
-    this.classList.add('loading');
-    this.disabled = true;
+// Redirect to Landing Page 2 when clicking anywhere on the page
+function redirectToLP2() {
+    // Add loading animation
+    document.body.style.cursor = 'wait';
     
     // Save confirmation in sessionStorage
     sessionStorage.setItem('ageConfirmed', 'true');
     sessionStorage.setItem('confirmTime', new Date().getTime());
     
-    // Redirect to Landing Page 2 after short delay
-    setTimeout(function() {
-        window.location.href = 'https://promotionnova855.com';
-    }, 500);
+    // Redirect to Landing Page 2
+    window.location.href = 'https://promotionnova855.com';
+}
+
+// Make entire page clickable
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event to entire document
+    document.body.addEventListener('click', function(e) {
+        redirectToLP2();
+    });
+    
+    // Also add cursor pointer to show it's clickable
+    document.body.style.cursor = 'pointer';
+    
+    // Add hover effect to popup
+    const popup = document.querySelector('.popup');
+    if (popup) {
+        popup.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.02)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        popup.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
 });
 
 // Check if user already confirmed (within same session)
@@ -48,24 +50,6 @@ window.addEventListener('load', function() {
 // Add smooth scroll behavior
 document.documentElement.style.scrollBehavior = 'smooth';
 
-// Prevent form submission on Enter key
-document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        if (checkbox.checked) {
-            continueBtn.click();
-        }
-    }
-});
-
-// Add visual feedback for checkbox
-checkbox.parentElement.addEventListener('click', function(e) {
-    if (e.target !== checkbox) {
-        checkbox.checked = !checkbox.checked;
-        checkbox.dispatchEvent(new Event('change'));
-    }
-});
-
 // Track user interaction for analytics (optional)
 let interactionStartTime = new Date().getTime();
 
@@ -73,25 +57,4 @@ window.addEventListener('beforeunload', function() {
     const timeSpent = Math.round((new Date().getTime() - interactionStartTime) / 1000);
     console.log('Time spent on page:', timeSpent, 'seconds');
     // You can send this to analytics service
-});
-
-// Add animation when checkbox is checked
-checkbox.addEventListener('change', function() {
-    const customCheckbox = this.nextElementSibling;
-    if (this.checked) {
-        customCheckbox.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            customCheckbox.style.transform = 'scale(1)';
-        }, 200);
-    }
-});
-
-// Disable right-click (optional security measure)
-// document.addEventListener('contextmenu', function(e) {
-//     e.preventDefault();
-// });
-
-// Disable text selection on button (for better UX)
-continueBtn.addEventListener('selectstart', function(e) {
-    e.preventDefault();
 });
